@@ -1,0 +1,41 @@
+import React from 'react';
+
+interface MetricCardProps {
+    label: string;
+    value: string | number;
+    sublabel?: string;
+    variant?: 'default' | 'danger' | 'success';
+    showBar?: boolean;
+    barValue?: number;
+}
+
+export const MetricCard: React.FC<MetricCardProps> = ({
+    label,
+    value,
+    sublabel,
+    variant = 'default',
+    showBar = false,
+    barValue = 0,
+}) => {
+    const valueColor = variant === 'danger' ? 'text-[#FF3D00]' : variant === 'success' ? 'text-green-500' : 'text-[var(--text-primary)]';
+
+    return (
+        <div className="p-8 border-r border-[var(--ui-border)] last:border-r-0 space-y-6">
+            <div className="text-[10px] mono opacity-40 font-bold tracking-widest uppercase">{label}</div>
+            <div className="flex flex-col">
+                <span className={`text-6xl lg:text-8xl font-black ${valueColor}`}>{value}</span>
+                {sublabel && (
+                    <span className="text-[10px] mono opacity-40   mt-2 uppercase tracking-tight">{sublabel}</span>
+                )}
+            </div>
+            {showBar && (
+                <div className="h-2 w-full bg-[var(--surface-hover)]">
+                    <div
+                        className={`h-full transition-all duration-1000 ${variant === 'danger' ? 'bg-[#FF3D00]' : 'bg-[var(--text-primary)]'}`}
+                        style={{ width: `${Math.min(100, barValue)}%` }}
+                    />
+                </div>
+            )}
+        </div>
+    );
+};

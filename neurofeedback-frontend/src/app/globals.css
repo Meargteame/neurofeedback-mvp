@@ -1,0 +1,160 @@
+@import "tailwindcss";
+
+:root {
+  --accent: #FF3D00;
+
+  /* Dark Mode (Default) Tokens */
+  --bg: #0A0A0A;
+  --ui-border: #222222;
+  /* or #ffffff1a for 10% white */
+  --ui-border-rgb: 255, 255, 255;
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255, 255, 255, 0.4);
+  --surface: rgba(255, 255, 255, 0.02);
+  --surface-hover: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme='light'] {
+  /* Light Mode Tokens */
+  --bg: #F0F0F0;
+  --ui-border: #E5E5E5;
+  --ui-border-rgb: 0, 0, 0;
+  --text-primary: #0A0A0A;
+  --text-secondary: rgba(10, 10, 10, 0.4);
+  --surface: rgba(0, 0, 0, 0.03);
+  --surface-hover: rgba(0, 0, 0, 0.05);
+}
+
+body {
+  font-family: 'Space Grotesk', sans-serif;
+  background: var(--bg);
+  color: var(--text-primary);
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+}
+
+.grid-pattern {
+  background-image: radial-gradient(rgba(255, 61, 0, 0.1) 1px, transparent 0);
+  background-size: 50px 50px;
+}
+
+/* Laser Beam Animations */
+.laser-h {
+  position: absolute;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.laser-v {
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(180deg, transparent, var(--accent), transparent);
+  opacity: 0.3;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@keyframes scan-h {
+  0% {
+    transform: translateY(-100vh);
+  }
+
+  100% {
+    transform: translateY(200vh);
+  }
+}
+
+@keyframes scan-v {
+  0% {
+    transform: translateX(-100vw);
+  }
+
+  100% {
+    transform: translateX(200vw);
+  }
+}
+
+@keyframes pulse-accent {
+
+  0%,
+  100% {
+    box-shadow: 0 0 5px var(--accent);
+  }
+
+  50% {
+    box-shadow: 0 0 20px var(--accent);
+  }
+}
+
+.animate-scan-h {
+  animation: scan-h 12s linear infinite;
+}
+
+.animate-scan-v {
+  animation: scan-v 15s linear infinite;
+}
+
+.animate-pulse-accent {
+  animation: pulse-accent 2s infinite ease-in-out;
+}
+
+.bento-border {
+  border: 1px solid var(--ui-border);
+  transition: all 0.3s ease;
+}
+
+.bento-border:hover {
+  border-color: var(--accent);
+  box-shadow: inset 0 0 20px rgba(255, 61, 0, 0.05);
+}
+
+.custom-cursor {
+  cursor: crosshair;
+}
+
+.noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://grainy-gradients.vercel.app/noise.svg');
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.btn-sharp {
+  padding: 16px 32px;
+  background: var(--text-primary);
+  color: var(--bg);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-radius: 0;
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid transparent;
+}
+
+.btn-sharp:hover {
+  background: var(--accent);
+  color: white;
+  transform: scale(1.02);
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
