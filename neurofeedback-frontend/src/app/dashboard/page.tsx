@@ -8,7 +8,7 @@ import { ProtocolCard } from '@/components/dashboard/ProtocolCard';
 import { TelemetryChart } from '@/components/dashboard/TelemetryChart';
 import { Button } from '@/components/ui/Button';
 import { metricsService, mockBreakSuggestions } from '@/lib/mock-data';
-import { FocusMetrics, BreakSuggestion, MetricChartData } from '@/types';
+import { FocusMetrics, BreakSuggestion, MetricChartData, User } from '@/types';
 
 export default function DashboardPage() {
     const router = useRouter();
@@ -16,7 +16,7 @@ export default function DashboardPage() {
     const [breaks, setBreaks] = useState<BreakSuggestion[]>([]);
     const [chartData, setChartData] = useState<MetricChartData[]>([]);
     const [isGeneratingBreaks, setIsGeneratingBreaks] = useState(false);
-    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         // Check auth

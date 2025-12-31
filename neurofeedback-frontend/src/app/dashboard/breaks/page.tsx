@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { ProtocolCard } from '@/components/dashboard/ProtocolCard';
 import { mockBreakSuggestions } from '@/lib/mock-data';
+import { User } from '@/types';
 
 export default function BreaksPage() {
     const router = useRouter();
-    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
