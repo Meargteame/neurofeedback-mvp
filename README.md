@@ -47,7 +47,26 @@ npm run dev
 4. Select the `neurofeedback-extension` folder from this project.
 5. The extension is now active and will sync data to `localhost:3001`.
 
-### 3. Connect Your Session
+## Deployment
+
+### Option 1: Vercel (Frontend Only)
+The frontend is configured to deploy on Vercel. 
+1. Import this repository into Vercel.
+2. **Important:** In Vercel Project Settings > General, set the **Root Directory** to `neurofeedback-frontend`.
+3. The frontend will use mock data if the backend is not reachable.
+
+### Option 2: Docker (Full Stack)
+To deploy the full system (Frontend + Backend + Database) to a VPS or Docker-compatible host:
+
+1. Ensure Docker and Docker Compose are installed.
+2. Run the deployment script:
+   ```bash
+   ./deploy.sh
+   ```
+   Or manually:
+   ```bash
+   docker-compose up --build -d
+   ```
 
 1. Go to [http://localhost:3000/login](http://localhost:3000/login).
 2. Sign up for a new account.
