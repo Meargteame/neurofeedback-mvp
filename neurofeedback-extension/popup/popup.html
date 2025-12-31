@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NeuroFeedback Sensor</title>
+    <style>
+        body {
+            width: 300px;
+            background-color: #0A0A0A;
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 16px;
+            text-transform: uppercase;
+            color: #FF3D00;
+            margin-bottom: 20px;
+            letter-spacing: 2px;
+        }
+        .status {
+            font-size: 12px;
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #333;
+        }
+        .status.active {
+            border-color: #FF3D00;
+            color: #FF3D00;
+        }
+        input {
+            width: 100%;
+            background: #111;
+            border: 1px solid #333;
+            color: #fff;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background: #FF3D00;
+            color: #000;
+            border: none;
+            padding: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+        }
+        button:hover {
+            background: #ff5722;
+        }
+    </style>
+</head>
+<body>
+    <h1>NeuroFeedback.OS</h1>
+    
+    <div id="status" class="status">
+        SENSOR_STATUS: <span id="statusText">DISCONNECTED</span>
+    </div>
+
+    <div id="loginForm">
+        <input type="text" id="userId" placeholder="USER_ID (UUID)" />
+        <button id="saveBtn">INITIALIZE_LINK</button>
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,35 +1,58 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { TelemetryChart } from '@/components/dashboard/TelemetryChart';
 import { metricsService } from '@/lib/mock-data';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 export default function MetricsPage() {
-    const user = {
-        id: '1',
-        email: 'demo@neurofeedback.io',
-        name: 'Demo User',
+    const router = useRouter();
+    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [todayData, setTodayData] = useState<any[]>([]);
+    const [weeklyData, setWeeklyData] = useState<any[]>([]);
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+
+        if (!token || !storedUser) {
+            router.push('/login');
+            return;
+        }
+
+        setUser(JSON.parse(storedUser));
+
+        // Fetch data
+        metricsService.getTodayData().then(setTodayData).catch(console.error);
+        metricsService.getWeeklyTrend().then(setWeeklyData).catch(console.error);
+    }, [router]);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        router.push('/');
     };
 
-    const todayData = metricsService.getTodayData();
-    const weeklyData = metricsService.getWeeklyTrend();
+    if (!user) {
+        return null;
+    }
 
     return (
-        <DashboardLayout user={user} onLogout={() => { }}>
+        <DashboardLayout user={user} onLogout={handleLogout}>
             <div className="space-y-0">
                 {/* Header */}
                 <div className="mb-12">
-                    <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-2">DETAILED_ANALYTICS</div>
-                    <h2 className="text-5xl font-bold tracking-tighter uppercase">Focus_Metrics</h2>
+                    <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-2">Detailed Analytics</div>
+                    <h2 className="text-5xl font-bold tracking-tighter uppercase">Focus Metrics</h2>
                 </div>
 
                 {/* Today's Detailed View */}
                 <div className="border border-white/10 bg-[#0A0A0A] mb-8">
                     <div className="p-8 border-b border-white/10">
-                        <h3 className="text-2xl font-bold tracking-tighter uppercase">Today's_Activity</h3>
-                        <p className="text-[10px] mono opacity-40 mt-1">HOURLY_COGNITIVE_LOAD_DISTRIBUTION</p>
+                        <h3 className="text-2xl font-bold tracking-tighter uppercase">Today's Activity</h3>
+                        <p className="text-[10px] mono opacity-40 mt-1">Hourly Mental Load</p>
                     </div>
                     <div className="p-12">
                         <div className="h-[400px] w-full">
@@ -65,8 +88,8 @@ export default function MetricsPage() {
                 {/* Weekly Trend */}
                 <div className="border border-white/10 bg-[#0A0A0A] mb-8">
                     <div className="p-8 border-b border-white/10">
-                        <h3 className="text-2xl font-bold tracking-tighter uppercase">Weekly_Trend</h3>
-                        <p className="text-[10px] mono opacity-40 mt-1">AVERAGE_DAILY_LOAD</p>
+                        <h3 className="text-2xl font-bold tracking-tighter uppercase">Weekly Trend</h3>
+                        <p className="text-[10px] mono opacity-40 mt-1">Average Daily Load</p>
                     </div>
                     <div className="p-12">
                         <div className="h-[300px] w-full">

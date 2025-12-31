@@ -1,17 +1,21 @@
 import { FocusMetrics, MetricChartData, BreakSuggestion, DailySummary } from '@/types';
 
-const API_URL = 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 // Real API Service
 export const metricsService = {
     // Save current session metrics to backend
     async tick(metrics: FocusMetrics) {
         try {
+            const userStr = localStorage.getItem('user');
+            if (!userStr) return;
+            const user = JSON.parse(userStr);
+
             await fetch(`${API_URL}/metrics`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    user_id: '1', // Hardcoded for MVP
+                    user_id: user.id,
                     active_time: metrics.activeSeconds / 60, // backend expects minutes
                     idle_time: metrics.idleSeconds / 60,
                     tab_switches: metrics.tabSwitches,
@@ -26,7 +30,10 @@ export const metricsService = {
     // Get aggregated data for dashboard
     async getTodayData(): Promise<MetricChartData[]> {
         try {
-            const res = await fetch(`${API_URL}/metrics/today?user_id=1`);
+            const userStr = localStorage.getItem('user');
+            const userId = userStr ? JSON.parse(userStr).id : '1';
+            
+            const res = await fetch(`${API_URL}/metrics/today?user_id=${userId}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
 
@@ -61,7 +68,10 @@ export const metricsService = {
 
     async getWeeklyTrend(): Promise<MetricChartData[]> {
         try {
-            const res = await fetch(`${API_URL}/metrics/history?user_id=1`);
+            const userStr = localStorage.getItem('user');
+            const userId = userStr ? JSON.parse(userStr).id : '1';
+
+            const res = await fetch(`${API_URL}/metrics/history?user_id=${userId}`);
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
 
@@ -120,14 +130,14 @@ export const getBreakSuggestions = async (focusScore: number): Promise<BreakSugg
         // Map strings to objects
         return data.suggestions.map((s: string, i: number) => ({
             id: `api-${i}`,
-            title: s.split(':')[0] || 'Protocol',
+            title: s.split(':')[0] || 'Break',
             description: s.split(':')[1] || s,
             durationMinutes: 2,
             category: 'mental'
         }));
     } catch (e) {
         return [
-            { id: '1', title: 'Offline_Reset', description: 'Backend unavailable. Take a deep breath.', durationMinutes: 1, category: 'mental' }
+            { id: '1', title: 'Quick Reset', description: 'System offline. Take a deep breath.', durationMinutes: 1, category: 'mental' }
         ];
     }
 };
@@ -150,8 +160,8 @@ export const getMockDailySummary = (): DailySummary => ({
 export const mockBreakSuggestions: BreakSuggestion[] = [
     {
         id: '1',
-        title: 'Tactical_Eye_Reset',
-        description: '20-20-20 rule: Look at something 20 feet away for 20 seconds.',
+        title: 'Eye Rest',
+        description: 'Look at something 20 feet away for 20 seconds.',
         durationMinutes: 1,
         category: 'visual',
     },

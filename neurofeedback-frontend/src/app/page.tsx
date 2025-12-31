@@ -3,112 +3,130 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
+import { Navbar } from '@/components/layout/Navbar';
 
 export default function HomePage() {
   const router = useRouter();
 
   return (
-    <div className="relative min-h-screen bg-[#0A0A0A] text-white">
+    <div className="relative min-h-screen bg-[var(--bg)] text-[var(--text-primary)] transition-colors duration-300">
       {/* Background FX */}
-      <div className="fixed inset-0 grid-pattern opacity-10 z-0"></div>
-      <div className="laser-h animate-scan-h" style={{ top: '20%' }}></div>
-      <div className="laser-v animate-scan-v" style={{ left: '30%' }}></div>
+      <div className="fixed inset-0 grid-pattern opacity-10 z-0 pointer-events-none"></div>
+      <div className="laser-h animate-scan-h pointer-events-none" style={{ top: '20%' }}></div>
+      <div className="laser-v animate-scan-v pointer-events-none" style={{ left: '30%' }}></div>
 
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-[100] border-b border-white/5 bg-[#0A0A0A]/90 backdrop-blur-2xl px-8 h-24 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <div className="flex items-center gap-2">
-            <div className="w-5 h-5 bg-[#FF3D00] shadow-[0_0_15px_#FF3D00]"></div>
-            <div className="text-2xl font-black tracking-tighter uppercase leading-none">Neuro_Feedback</div>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" onClick={() => router.push('/login')}>
-            AUTH.LOGIN
-          </Button>
-          <Button onClick={() => router.push('/dashboard')}>
-            DEPLOY_MODULE →
-          </Button>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
-      <section className="relative z-10 min-h-screen flex flex-col justify-center px-8 lg:px-20 max-w-[1600px] mx-auto pt-24">
-        <div className="space-y-12">
+      <section className="relative z-10 min-h-screen flex flex-col px-8 lg:px-20 max-w-[1600px] mx-auto pt-12 pb-12">
+        <div className="flex-1 flex flex-col justify-center space-y-6 md:ml-48">
           <div className="mono text-[11px] text-[#FF3D00] font-black uppercase tracking-[0.5em] flex items-center gap-3">
             <span className="w-8 h-[2px] bg-[#FF3D00]"></span>
-            High-Precision Cognitive Tracking
+            Cognitive Performance System
           </div>
-          <h1 className="text-7xl md:text-[140px] font-bold leading-[0.8] tracking-tighter uppercase max-w-5xl">
+          <h1 className="text-6xl md:text-[90px] font-bold leading-[0.9] tracking-tighter uppercase max-w-4xl">
             Deep <br />
-            <span className="text-white/10 italic">Work</span> <br />
+            <span className="text-[#888888] italic">Work</span> <br />
             Engineered
           </h1>
-          <p className="text-xl md:text-2xl mono text-white/50 max-w-2xl leading-relaxed">
-            The neural operating system for modern engineering teams. Quantify mental friction. Protect focus intervals. Prevent burnout with biometric precision.
+          <p className="text-lg md:text-xl mono text-[var(--text-secondary)] max-w-lg leading-relaxed">
+            Advanced behavioral analytics to quantify focus and prevent burnout. The neural operating system for modern engineering teams—no wearables required.
           </p>
-          <div className="flex flex-wrap gap-8">
-            <Button onClick={() => router.push('/dashboard')}>
-              START_SESSION_SYNC
+          
+          <div className="flex flex-col sm:flex-row gap-4 pt-2">
+            <Button size="lg" onClick={() => router.push('/dashboard')}>
+              Get Started
             </Button>
-            <div className="flex flex-col justify-center mono text-[10px] opacity-40 uppercase tracking-widest">
-              <span>Free for individual developers</span>
-              <span>Requires no invasive bio-sensors</span>
+            <Button variant="outline" size="lg" onClick={() => router.push('/login')}>
+              Log In
+            </Button>
+          </div>
+        </div>
+
+        {/* Stats / Social Proof */}
+        <div className="flex justify-between items-end border-t border-[var(--ui-border)] pt-8 mt-12">
+          <div className="flex gap-12">
+            <div>
+              <div className="text-3xl font-bold">14.2k</div>
+              <div className="text-[10px] mono uppercase opacity-50">Active Nodes</div>
             </div>
+            <div>
+              <div className="text-3xl font-bold">98.4%</div>
+              <div className="text-[10px] mono uppercase opacity-50">Uptime</div>
+            </div>
+          </div>
+          <div className="text-[10px] mono opacity-30 max-w-xs text-right hidden md:block">
+            SYSTEM STATUS: OPERATIONAL<br/>
+            LATENCY: 12ms<br/>
+            ENCRYPTION: AES-256
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-32 px-8 lg:px-20 max-w-[1600px] mx-auto border-t border-[var(--ui-border)]">
+      {/* 4 Main Sections */}
+      <section id="features" className="py-32 px-8 lg:px-20 max-w-[1600px] mx-auto border-t border-[var(--ui-border)]">
         <div className="mb-20">
-          <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-4">System_Capabilities</div>
-          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">Biometric <br /> Precision</h2>
+          <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-4">Features</div>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">What It <br /> Does</h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[var(--ui-border)]">
-          <div className="p-12 border-b md:border-b-0 md:border-r border-[var(--ui-border)] hover:bg-[var(--surface-hover)] transition-colors group">
-            <div className="text-[10px] mono opacity-40 mb-8 group-hover:text-[#FF3D00]">01 // DEEP_ANALYSIS</div>
-            <h3 className="text-2xl font-bold uppercase mb-4">Real-Time Telemetry</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-0 border border-[var(--ui-border)]">
+          {/* Section 1: Deep Focus Tracking */}
+          <div className="p-12 border-b md:border-r border-[var(--ui-border)] hover:bg-[var(--surface-hover)] transition-colors group">
+            <div className="text-[10px] mono opacity-40 mb-8 group-hover:text-[#FF3D00]">01 // TRACKING</div>
+            <h3 className="text-2xl font-bold uppercase mb-4">Track Your Focus</h3>
             <p className="mono text-xs opacity-50 leading-relaxed">
-              Live-stream cognitive load metrics directly to your dashboard. Detect flow state interruptions with ms-latency.
+              See exactly when you're focused and when you're distracted. Works automatically in the background while you work.
             </p>
           </div>
-          <div className="p-12 border-b md:border-b-0 md:border-r border-[var(--ui-border)] hover:bg-[var(--surface-hover)] transition-colors group">
-            <div className="text-[10px] mono opacity-40 mb-8 group-hover:text-[#FF3D00]">02 // RECOVERY_PROTOCOLS</div>
-            <h3 className="text-2xl font-bold uppercase mb-4">AI Recovery</h3>
+
+          {/* Section 2: Focus Dashboard */}
+          <div className="p-12 border-b border-[var(--ui-border)] hover:bg-[var(--surface-hover)] transition-colors group">
+            <div className="text-[10px] mono opacity-40 mb-8 group-hover:text-[#FF3D00]">02 // DASHBOARD</div>
+            <h3 className="text-2xl font-bold uppercase mb-4">Simple Dashboard</h3>
             <p className="mono text-xs opacity-50 leading-relaxed">
-              Automated micro-break suggestions based on current fatigue levels. Prevent burnout before it begins.
+              See your daily activity in clear charts. Understand your energy levels and work patterns at a glance.
             </p>
           </div>
+
+          {/* Section 3: Smart Recovery */}
+          <div className="p-12 border-b md:border-b-0 md:border-r border-[var(--ui-border)] hover:bg-[var(--surface-hover)] transition-colors group">
+            <div className="text-[10px] mono opacity-40 mb-8 group-hover:text-[#FF3D00]">03 // REMINDERS</div>
+            <h3 className="text-2xl font-bold uppercase mb-4">Smart Break Reminders</h3>
+            <p className="mono text-xs opacity-50 leading-relaxed">
+              Get friendly reminders to take a break before you get tired. Prevents burnout by suggesting stretches or water breaks.
+            </p>
+          </div>
+
+          {/* Section 4: Non-Invasive Telemetry */}
           <div className="p-12 hover:bg-[var(--surface-hover)] transition-colors group">
-            <div className="text-[10px] mono opacity-40 mb-8 group-hover:text-[#FF3D00]">03 // PRIVACY_CORE</div>
-            <h3 className="text-2xl font-bold uppercase mb-4">Local-First Intel</h3>
+            <div className="text-[10px] mono opacity-40 mb-8 group-hover:text-[#FF3D00]">04 // BACKGROUND</div>
+            <h3 className="text-2xl font-bold uppercase mb-4">Works in Background</h3>
             <p className="mono text-xs opacity-50 leading-relaxed">
-              Your neural data never leaves your local environment without encryption. Enterprise-grade security standard.
+              Runs quietly without slowing down your computer. We respect your privacy and only measure activity patterns.
             </p>
           </div>
         </div>
       </section>
 
       {/* Methodology / No Wearables */}
-      <section className="py-32 bg-[var(--surface)] border-y border-[var(--ui-border)]">
+      <section id="methodology" className="py-32 bg-[var(--surface)] border-y border-[var(--ui-border)]">
         <div className="px-8 lg:px-20 max-w-[1600px] mx-auto flex flex-col md:flex-row items-center gap-20">
           <div className="flex-1">
-            <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-4">Methodology</div>
-            <h2 className="text-5xl font-bold tracking-tighter uppercase mb-8">No Hardware <br /> Required</h2>
+            <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-4">How It Works</div>
+            <h2 className="text-5xl font-bold tracking-tighter uppercase mb-8">No Extra <br /> Gadgets</h2>
             <p className="text-xl mono opacity-50 leading-relaxed mb-8">
-              We leverage advanced behavioral heuristics—typing patterns, context switching velocity, and idle time variance—to approximate neural states with 94% correlation to EEG headsets.
+              We use smart patterns from your typing and mouse movement to understand your focus levels. It's just as accurate as expensive headsets, but without the hassle.
             </p>
             <div className="flex gap-12">
               <div>
                 <div className="text-4xl font-bold">94%</div>
-                <div className="text-[10px] mono opacity-40 mt-1">ACCURACY_RT</div>
+                <div className="text-[10px] mono opacity-40 mt-1">Accuracy</div>
               </div>
               <div>
                 <div className="text-4xl font-bold">0g</div>
-                <div className="text-[10px] mono opacity-40 mt-1">HARDWARE_WEIGHT</div>
+                <div className="text-[10px] mono opacity-40 mt-1">Weight</div>
               </div>
             </div>
           </div>
@@ -118,7 +136,7 @@ export default function HomePage() {
               <div className="w-64 h-64 border border-[#FF3D00] rounded-full animate-pulse-accent flex items-center justify-center relative">
                 <div className="w-48 h-48 border border-[#FF3D00] rounded-full opacity-50"></div>
                 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[10px] mono text-[#FF3D00] animate-pulse">
-                  SENSORY_INPUT_ACTIVE
+                  Active
                 </div>
               </div>
               <div className="absolute top-0 left-0 w-full h-[1px] bg-[#FF3D00] animate-scan-h opacity-20"></div>
@@ -127,32 +145,205 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Pricing / CTA */}
-      <section className="py-32 px-8 lg:px-20 max-w-[1600px] mx-auto">
-        <div className="flex flex-col items-center text-center max-w-3xl mx-auto space-y-8">
-          <h2 className="text-5xl md:text-7xl font-bold tracking-tighter uppercase">Initialize <br /> Access</h2>
-          <p className="text-xl mono opacity-50">
-            Join 10,000+ engineers optimizing their cognitive performance.
-          </p>
-          <div className="flex flex-col md:flex-row gap-4 w-full justify-center pt-8">
-            <Button onClick={() => router.push('/dashboard')} className="text-lg px-12 py-6">
-              START_FREE_TRIAL
-            </Button>
-            <Button variant="outline" onClick={() => router.push('/login')} className="text-lg px-12 py-6">
-              ENTER_DEMO_MODE
-            </Button>
+      {/* Privacy & Security */}
+      <section id="privacy" className="py-32 px-8 lg:px-20 max-w-[1600px] mx-auto border-b border-[var(--ui-border)]">
+        <div className="mb-20">
+          <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-4">Privacy</div>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">Your Data <br /> Is Safe</h2>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="p-8 border border-[var(--ui-border)] bg-[var(--surface)]">
+            <div className="w-12 h-12 bg-[#FF3D00]/10 flex items-center justify-center mb-6">
+              <div className="w-2 h-2 bg-[#FF3D00]"></div>
+            </div>
+            <h3 className="text-xl font-bold uppercase mb-4">Stays on Your Device</h3>
+            <p className="mono text-xs opacity-50 leading-relaxed">
+              Your typing data never leaves your computer. We only see the final score.
+            </p>
           </div>
-          <p className="text-[10px] mono opacity-40 pt-4">NO_CREDIT_CARD_REQUIRED_FOR_MVP</p>
+          <div className="p-8 border border-[var(--ui-border)] bg-[var(--surface)]">
+            <div className="w-12 h-12 bg-[#FF3D00]/10 flex items-center justify-center mb-6">
+              <div className="w-2 h-2 bg-[#FF3D00]"></div>
+            </div>
+            <h3 className="text-xl font-bold uppercase mb-4">Fully Encrypted</h3>
+            <p className="mono text-xs opacity-50 leading-relaxed">
+              Your data is locked and secure. Only you can see your personal reports.
+            </p>
+          </div>
+          <div className="p-8 border border-[var(--ui-border)] bg-[var(--surface)]">
+            <div className="w-12 h-12 bg-[#FF3D00]/10 flex items-center justify-center mb-6">
+              <div className="w-2 h-2 bg-[#FF3D00]"></div>
+            </div>
+            <h3 className="text-xl font-bold uppercase mb-4">You're in Control</h3>
+            <p className="mono text-xs opacity-50 leading-relaxed">
+              Delete your data anytime with one click. We respect your right to be forgotten.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section id="pricing" className="py-32 px-8 lg:px-20 max-w-[1600px] mx-auto border-b border-[var(--ui-border)]">
+        <div className="text-center mb-20">
+          <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-4">Plans</div>
+          <h2 className="text-4xl md:text-6xl font-bold tracking-tighter uppercase">Choose Your Plan</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-[var(--ui-border)]">
+          {/* Free Tier */}
+          <div className="p-12 border-b md:border-b-0 md:border-r border-[var(--ui-border)] hover:bg-[var(--surface-hover)] transition-colors flex flex-col">
+            <div className="text-[10px] mono opacity-40 mb-4">STARTER</div>
+            <h3 className="text-3xl font-bold uppercase mb-2">Free</h3>
+            <div className="text-4xl font-bold mb-8">$0<span className="text-sm font-normal opacity-50">/mo</span></div>
+            <ul className="space-y-4 mb-12 flex-1">
+              <li className="flex items-center gap-3 text-sm mono opacity-70">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Basic Tracking
+              </li>
+              <li className="flex items-center gap-3 text-sm mono opacity-70">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> 7-Day History
+              </li>
+              <li className="flex items-center gap-3 text-sm mono opacity-70">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Basic Reminders
+              </li>
+            </ul>
+            <Button variant="outline" className="w-full">Get Started</Button>
+          </div>
+
+          {/* Pro Tier */}
+          <div className="p-12 border-b md:border-b-0 md:border-r border-[var(--ui-border)] bg-[var(--surface)] relative flex flex-col">
+            <div className="absolute top-0 left-0 w-full h-1 bg-[#FF3D00]"></div>
+            <div className="text-[10px] mono text-[#FF3D00] mb-4">PRO</div>
+            <h3 className="text-3xl font-bold uppercase mb-2">Pro</h3>
+            <div className="text-4xl font-bold mb-8">$12<span className="text-sm font-normal opacity-50">/mo</span></div>
+            <ul className="space-y-4 mb-12 flex-1">
+              <li className="flex items-center gap-3 text-sm mono">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Advanced Insights
+              </li>
+              <li className="flex items-center gap-3 text-sm mono">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Unlimited History
+              </li>
+              <li className="flex items-center gap-3 text-sm mono">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Custom Reminders
+              </li>
+              <li className="flex items-center gap-3 text-sm mono">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Deep Work Analysis
+              </li>
+            </ul>
+            <Button className="w-full">Upgrade Now</Button>
+          </div>
+
+          {/* Team Tier */}
+          <div className="p-12 hover:bg-[var(--surface-hover)] transition-colors flex flex-col">
+            <div className="text-[10px] mono opacity-40 mb-4">TEAM</div>
+            <h3 className="text-3xl font-bold uppercase mb-2">Team</h3>
+            <div className="text-4xl font-bold mb-8">$49<span className="text-sm font-normal opacity-50">/mo</span></div>
+            <ul className="space-y-4 mb-12 flex-1">
+              <li className="flex items-center gap-3 text-sm mono opacity-70">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Team Dashboard
+              </li>
+              <li className="flex items-center gap-3 text-sm mono opacity-70">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> Burnout Alerts
+              </li>
+              <li className="flex items-center gap-3 text-sm mono opacity-70">
+                <span className="w-1 h-1 bg-[#FF3D00]"></span> API Access
+              </li>
+            </ul>
+            <Button variant="outline" className="w-full">Contact Sales</Button>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section id="faq" className="py-32 px-8 lg:px-20 max-w-[1600px] mx-auto">
+        <div className="flex flex-col md:flex-row gap-20">
+          <div className="md:w-1/3">
+            <div className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-[0.3em] mb-4">Help</div>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tighter uppercase mb-8">Common <br /> Questions</h2>
+            <p className="text-lg mono opacity-50 leading-relaxed">
+              Answers to common questions about how the app works.
+            </p>
+          </div>
+          <div className="md:w-2/3 space-y-8">
+            <div className="border-b border-[var(--ui-border)] pb-8">
+              <h3 className="text-xl font-bold uppercase mb-4">Will it slow down my computer?</h3>
+              <p className="mono text-xs opacity-50 leading-relaxed">
+                No. The app is very lightweight and you won't even notice it running.
+              </p>
+            </div>
+            <div className="border-b border-[var(--ui-border)] pb-8">
+              <h3 className="text-xl font-bold uppercase mb-4">Do you read what I type?</h3>
+              <p className="mono text-xs opacity-50 leading-relaxed">
+                Never. We only count how fast you type, not what you type. Your passwords and messages are safe.
+              </p>
+            </div>
+            <div className="border-b border-[var(--ui-border)] pb-8">
+              <h3 className="text-xl font-bold uppercase mb-4">Do I need a headset?</h3>
+              <p className="mono text-xs opacity-50 leading-relaxed">
+                No. The app works with just your keyboard and mouse.
+              </p>
+            </div>
+            <div className="pb-8">
+              <h3 className="text-xl font-bold uppercase mb-4">Can I export my data?</h3>
+              <p className="mono text-xs opacity-50 leading-relaxed">
+                Yes. All metrics are available in JSON/CSV format via the dashboard or API for Pro users.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-24 px-8 lg:px-20 max-w-[1600px] mx-auto border-t border-white/10">
-        <div className="flex justify-between items-center text-[10px] mono opacity-40 uppercase tracking-widest">
-          <div>© 2025 NEUROFEEDBACK_SYSTEMS</div>
-          <div>EST. 40.7128° N, 74.0060° W</div>
+      <footer className="py-20 px-8 lg:px-20 max-w-[1600px] mx-auto border-t border-[var(--ui-border)] bg-[var(--surface)]">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="col-span-1 md:col-span-1">
+            <div className="flex items-center gap-2 mb-6">
+              <div className="w-4 h-4 bg-[#FF3D00] rounded-sm"></div>
+              <span className="text-xs font-bold tracking-widest uppercase mono">
+                NeuroFeedback<span className="text-[#FF3D00]">.OS</span>
+              </span>
+            </div>
+            <p className="mono text-[10px] opacity-40 leading-relaxed max-w-xs">
+              Work smarter. Stay focused.
+            </p>
+          </div>
+          
+          <div>
+            <h4 className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-widest mb-6">Product</h4>
+            <ul className="space-y-3 text-xs mono opacity-60">
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Features</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Pricing</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Changelog</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Documentation</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-widest mb-6">Company</h4>
+            <ul className="space-y-3 text-xs mono opacity-60">
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Manifesto</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Careers</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Blog</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Contact</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="text-[10px] mono text-[#FF3D00] font-bold uppercase tracking-widest mb-6">Legal</h4>
+            <ul className="space-y-3 text-xs mono opacity-60">
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Privacy Policy</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">Terms of Service</a></li>
+              <li><a href="#" className="hover:text-[#FF3D00] transition-colors">DPA</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t border-[var(--ui-border)] text-[10px] mono opacity-30 uppercase tracking-widest">
+          <div>© 2025 NeuroFeedback Systems Inc.</div>
+          <div className="mt-4 md:mt-0">New York, NY</div>
         </div>
       </footer>
     </div>
   );
 }
+

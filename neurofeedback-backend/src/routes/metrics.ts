@@ -18,7 +18,18 @@ const requireAuth = (req: AuthRequest, res: Response, next: Function) => {
 
 // POST /metrics - Save session
 router.post('/', async (req: Request, res: Response) => {
-    const { user_id, active_time, idle_time, tab_switches, typing_events } = req.body;
+    let { user_id, active_time, idle_time, tab_switches, typing_events } = req.body;
+
+    if (!user_id) {
+        res.status(400).json({ error: 'Missing user_id' });
+        return;
+    }
+
+    // Validate and sanitize input
+    active_time = Number(active_time) || 0;
+    idle_time = Number(idle_time) || 0;
+    tab_switches = Number(tab_switches) || 0;
+    typing_events = Number(typing_events) || 0;
 
     try {
         const stmt = db.prepare(`
@@ -27,8 +38,9 @@ router.post('/', async (req: Request, res: Response) => {
     `);
         const result = stmt.run(user_id, active_time, idle_time, tab_switches, typing_events);
         res.status(201).json({ id: result.lastInsertRowid });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to save metrics' });
+    } catch (error: any) {
+        console.error('Metrics save error:', error);
+        res.status(500).json({ error: 'Failed to save metrics', details: error.message });
     }
 });
 

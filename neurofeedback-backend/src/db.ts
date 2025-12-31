@@ -1,6 +1,8 @@
 import Database from 'better-sqlite3';
+import path from 'path';
 
-const db = new Database('neurofeedback.db', { verbose: console.log });
+const dbPath = process.env.DB_PATH || 'neurofeedback.db';
+const db = new Database(dbPath);
 
 // Initialize Schema
 db.exec(`
@@ -33,3 +35,4 @@ db.exec(`
 console.log('Database initialized successfully');
 
 export default db;
+
