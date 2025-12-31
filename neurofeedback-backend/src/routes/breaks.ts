@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import db from '../db';
+import db from '../database';
 
 const router = express.Router();
 
@@ -38,11 +38,14 @@ router.post('/', async (req: Request, res: Response) => {
         const suggestionsStr = JSON.stringify(suggestions);
 
         // Save suggestion event (optional for history)
-        const stmt = db.prepare('INSERT INTO break_suggestions (focus_score, suggestions) VALUES (?, ?)');
-        stmt.run(focus_score, suggestionsStr);
+        await db.execute(
+            'INSERT INTO break_suggestions (focus_score, suggestions) VALUES ($1, $2)',
+            [focus_score, suggestionsStr]
+        );
 
         res.json({ suggestions });
     } catch (error) {
+        console.error('Break generation error:', error);
         res.status(500).json({ error: 'Failed to generate suggestions' });
     }
 });

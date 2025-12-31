@@ -2,7 +2,7 @@ import express, { Request, Response } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
-import db from '../db';
+import db from '../database';
 import { v4 as uuidv4 } from 'uuid';
 
 const router = express.Router();
@@ -34,14 +34,17 @@ router.post('/signup', async (req: Request, res: Response): Promise<void> => {
         const hashedPassword = await bcrypt.hash(password, 10);
         const id = uuidv4();
 
-        const stmt = db.prepare('INSERT INTO users (id, email, password_hash) VALUES (?, ?, ?)');
-        stmt.run(id, email, hashedPassword);
+        await db.execute(
+            'INSERT INTO users (id, email, password_hash) VALUES ($1, $2, $3)',
+            [id, email, hashedPassword]
+        );
 
         const token = jwt.sign({ id, email }, JWT_SECRET, { expiresIn: '24h' });
 
         res.status(201).json({ token, user: { id, email } });
     } catch (error: any) {
-        if (error.code === 'SQLITE_CONSTRAINT_UNIQUE') {
+        // Check for unique constraint violation (SQLite: SQLITE_CONSTRAINT_UNIQUE, Postgres: 23505)
+        if (error.code === 'SQLITE_CONSTRAINT_UNIQUE' || error.code === '23505') {
             res.status(409).json({ error: 'Email already exists' });
         } else {
             console.error('Signup error:', error);
@@ -62,8 +65,7 @@ router.post('/login', async (req: Request, res: Response): Promise<void> => {
 
         const { email, password } = result.data;
 
-        const stmt = db.prepare('SELECT * FROM users WHERE email = ?');
-        const user = stmt.get(email) as any;
+        const user = await db.get('SELECT * FROM users WHERE email = $1', [email]);
 
         if (!user || !(await bcrypt.compare(password, user.password_hash))) {
             res.status(401).json({ error: 'Invalid credentials' });

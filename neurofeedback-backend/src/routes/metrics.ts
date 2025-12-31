@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import db from '../db';
+import db from '../database';
 
 const router = express.Router();
 
@@ -32,12 +32,12 @@ router.post('/', async (req: Request, res: Response) => {
     typing_events = Number(typing_events) || 0;
 
     try {
-        const stmt = db.prepare(`
-      INSERT INTO focus_sessions (user_id, active_time, idle_time, tab_switches, typing_events)
-      VALUES (?, ?, ?, ?, ?)
-    `);
-        const result = stmt.run(user_id, active_time, idle_time, tab_switches, typing_events);
-        res.status(201).json({ id: result.lastInsertRowid });
+        const result = await db.execute(
+            `INSERT INTO focus_sessions (user_id, active_time, idle_time, tab_switches, typing_events)
+             VALUES ($1, $2, $3, $4, $5)`,
+            [user_id, active_time, idle_time, tab_switches, typing_events]
+        );
+        res.status(201).json({ id: result.id });
     } catch (error: any) {
         console.error('Metrics save error:', error);
         res.status(500).json({ error: 'Failed to save metrics', details: error.message });
@@ -47,45 +47,82 @@ router.post('/', async (req: Request, res: Response) => {
 // GET /metrics/today - Dashboard Aggregates
 router.get('/today', async (req: Request, res: Response) => {
     const { user_id } = req.query;
+    if (!user_id) {
+        res.status(400).json({ error: 'Missing user_id' });
+        return;
+    }
 
     try {
-        // Get aggregated stats for today
-        const stmt = db.prepare(`
-      SELECT 
-        SUM(active_time) as total_active,
-        SUM(idle_time) as total_idle,
-        SUM(tab_switches) as total_switches,
-        AVG(active_time) as avg_session_length
-      FROM focus_sessions 
-      WHERE user_id = ? AND created_at >= date('now', 'start of day')
-    `);
-
-        const stats = stmt.get(user_id);
-        res.json(stats || { total_active: 0, total_idle: 0, total_switches: 0 });
-    } catch (error) {
+        // Simple aggregate for today
+        // Note: SQLite uses strftime, Postgres uses CURRENT_DATE or date_trunc
+        // We need a dialect-agnostic way or conditional logic.
+        // For MVP, let's use a simple query that might work on both or handle error.
+        
+        // Actually, let's just fetch all for the user and filter in JS for MVP simplicity across DBs
+        // OR use a raw query that is standard SQL.
+        
+        // "SELECT sum(active_time) as total_active FROM focus_sessions WHERE user_id = ? AND created_at > ?"
+        
+        const startOfDay = new Date();
+        startOfDay.setHours(0,0,0,0);
+        
+        const rows = await db.query(
+            `SELECT active_time, idle_time, created_at FROM focus_sessions WHERE user_id = $1`,
+            [user_id]
+        );
+        
+        // Filter for today in JS to avoid SQL dialect issues with dates
+        const todayRows = rows.filter((r: any) => {
+            const d = new Date(r.created_at);
+            return d >= startOfDay;
+        });
+        
+        const totalActive = todayRows.reduce((acc: number, curr: any) => acc + (curr.active_time || 0), 0);
+        const totalIdle = todayRows.reduce((acc: number, curr: any) => acc + (curr.idle_time || 0), 0);
+        
+        res.json({
+            total_active: totalActive,
+            total_idle: totalIdle,
+            session_count: todayRows.length
+        });
+    } catch (error: any) {
+        console.error('Metrics fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch metrics' });
     }
 });
 
-// GET /metrics/history - Last 7 Days
+// GET /metrics/history - Weekly Trend
 router.get('/history', async (req: Request, res: Response) => {
     const { user_id } = req.query;
+    if (!user_id) {
+        res.status(400).json({ error: 'Missing user_id' });
+        return;
+    }
 
     try {
-        const stmt = db.prepare(`
-      SELECT 
-        date(created_at) as date,
-        SUM(active_time) as active_time,
-        SUM(idle_time) as idle_time
-      FROM focus_sessions
-      WHERE user_id = ? AND created_at >= date('now', '-7 days')
-      GROUP BY date(created_at)
-      ORDER BY date ASC
-    `);
-
-        const history = stmt.all(user_id);
+        // Fetch all sessions
+        const rows = await db.query(
+            `SELECT active_time, created_at FROM focus_sessions WHERE user_id = $1 ORDER BY created_at DESC LIMIT 100`,
+            [user_id]
+        );
+        
+        // Group by date in JS
+        const dailyMap = new Map<string, number>();
+        
+        rows.forEach((r: any) => {
+            const dateStr = new Date(r.created_at).toISOString().split('T')[0];
+            const current = dailyMap.get(dateStr) || 0;
+            dailyMap.set(dateStr, current + (r.active_time || 0));
+        });
+        
+        const history = Array.from(dailyMap.entries()).map(([date, active_time]) => ({
+            date,
+            active_time
+        }));
+        
         res.json(history);
-    } catch (error) {
+    } catch (error: any) {
+        console.error('History fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch history' });
     }
 });
