@@ -4,11 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { TelemetryChart } from '@/components/dashboard/TelemetryChart';
+import { User, MetricChartData } from '@/types';
 import { getMockDailySummary, metricsService } from '@/lib/mock-data';
 
 export default function SummaryPage() {
     const router = useRouter();
-    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
@@ -29,7 +30,11 @@ export default function SummaryPage() {
     };
 
     const summary = getMockDailySummary();
-    const weeklyData = metricsService.getWeeklyTrend();
+    const [weeklyData, setWeeklyData] = useState<MetricChartData[]>([]);
+
+    useEffect(() => {
+        metricsService.getWeeklyTrend().then(setWeeklyData).catch(console.error);
+    }, []);
 
     if (!user) {
         return null;
@@ -74,7 +79,7 @@ export default function SummaryPage() {
                     </div>
                     <div className="p-12">
                         <div className="h-[300px] w-full">
-                            <TelemetryChart data={weeklyData} />
+                            {weeklyData.length > 0 ? <TelemetryChart data={weeklyData} /> : <div className="w-full h-full flex items-center justify-center text-[#FF3D00]/30">Loading chart...</div>}
                         </div>
                     </div>
                 </div>

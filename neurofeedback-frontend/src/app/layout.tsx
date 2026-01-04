@@ -27,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} custom-cursor antialiased`}
+        className={`${spaceGrotesk.variable} ${ibmPlexMono.variable} custom-cursor antialiased`
       >
         <div className="noise"></div>
         {children}

@@ -81,7 +81,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user, onLogout }) => {
                 {user ? (
                     <div className="flex items-center gap-3">
                         <div className="text-right hidden sm:block">
-                            <div className="text-xs font-bold">{user.name}</div>
+                            <div className="text-xs font-bold">{user.name || user.email.split('@')[0]}</div>
                             <div className="text-[10px] mono opacity-50">{user.email}</div>
                         </div>
                         <Button 

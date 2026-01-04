@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/Button';
+import { User } from '@/types';
 
 export default function SettingsPage() {
     const router = useRouter();
-    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
 
     useEffect(() => {
         const token = localStorage.getItem('token');

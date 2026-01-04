@@ -4,10 +4,11 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/Button';
+import { User } from '@/types';
 
 export default function JournalPage() {
     const router = useRouter();
-    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [energy, setEnergy] = useState(50);
     const [mood, setMood] = useState(50);
     const [clarity, setClarity] = useState(50);

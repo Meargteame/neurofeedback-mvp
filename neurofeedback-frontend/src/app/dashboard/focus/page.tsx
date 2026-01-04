@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Button } from '@/components/ui/Button';
 import { Play, Pause, Square, CheckCircle } from 'lucide-react';
+import { User } from '@/types';
 
 export default function FocusPage() {
     const router = useRouter();
-    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [isActive, setIsActive] = useState(false);
     const [timeLeft, setTimeLeft] = useState(25 * 60); // 25 minutes
     const [task, setTask] = useState('');

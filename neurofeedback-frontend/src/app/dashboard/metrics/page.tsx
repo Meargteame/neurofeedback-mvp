@@ -6,10 +6,11 @@ import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { TelemetryChart } from '@/components/dashboard/TelemetryChart';
 import { metricsService } from '@/lib/mock-data';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { User } from '@/types';
 
 export default function MetricsPage() {
     const router = useRouter();
-    const [user, setUser] = useState<{ email: string; id: string; name?: string } | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [todayData, setTodayData] = useState<any[]>([]);
     const [weeklyData, setWeeklyData] = useState<any[]>([]);
 
