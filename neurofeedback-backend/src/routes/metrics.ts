@@ -1,23 +1,39 @@
-import express, { Request, Response } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 import db from '../database';
 
 const router = express.Router();
+const JWT_SECRET = process.env.JWT_SECRET || 'neurofeedback-secret-key';
 
 interface AuthRequest extends Request {
     user?: any;
 }
 
-// Middleware to mock check auth (in real app, use JWT verification)
-const requireAuth = (req: AuthRequest, res: Response, next: Function) => {
+// Middleware to verify JWT
+const requireAuth = (req: AuthRequest, res: Response, next: NextFunction) => {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'Unauthorized' });
-    // For MVP: Decoding simply without verification for speed if needed, but here we assume verified by gateway
-    // Ideally verify token here.
-    next();
+    if (!token) {
+        // For MVP compatibility with existing extension code that might not send token yet,
+        // we might want to be lenient, but the request was "fill the gaps". 
+        // A secure system needs auth.
+        // However, if I break the extension which has commented out auth, that's bad.
+        // I will allow it if no token BUT strict if token is provided? No, that's insecure.
+        // I will enforce it and update the extension.
+        res.status(401).json({ error: 'Unauthorized: No token provided' });
+        return;
+    }
+
+    try {
+        const decoded = jwt.verify(token, JWT_SECRET);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ error: 'Unauthorized: Invalid token' });
+    }
 };
 
 // POST /metrics - Save session
-router.post('/', async (req: Request, res: Response) => {
+router.post('/', requireAuth, async (req: Request, res: Response) => {
     let { user_id, active_time, idle_time, tab_switches, typing_events } = req.body;
 
     if (!user_id) {
@@ -45,7 +61,7 @@ router.post('/', async (req: Request, res: Response) => {
 });
 
 // GET /metrics/today - Dashboard Aggregates
-router.get('/today', async (req: Request, res: Response) => {
+router.get('/today', requireAuth, async (req: Request, res: Response) => {
     const { user_id } = req.query;
     if (!user_id) {
         res.status(400).json({ error: 'Missing user_id' });
@@ -92,7 +108,7 @@ router.get('/today', async (req: Request, res: Response) => {
 });
 
 // GET /metrics/history - Weekly Trend
-router.get('/history', async (req: Request, res: Response) => {
+router.get('/history', requireAuth, async (req: Request, res: Response) => {
     const { user_id } = req.query;
     if (!user_id) {
         res.status(400).json({ error: 'Missing user_id' });

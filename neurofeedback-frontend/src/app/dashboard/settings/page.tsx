@@ -78,6 +78,23 @@ export default function SettingsPage() {
                                 </Button>
                             </div>
                         </div>
+                        <div className="space-y-2">
+                            <label className="text-xs mono opacity-40 uppercase text-[#FF3D00]">Auth Token (Expires 24h)</label>
+                            <div className="flex gap-2">
+                                <input 
+                                    type="text" 
+                                    value={localStorage.getItem('token') || ''} 
+                                    readOnly 
+                                    className="w-full bg-white/5 border border-white/10 p-3 text-sm mono text-[#FF3D00]"
+                                />
+                                <Button 
+                                    size="sm" 
+                                    onClick={() => navigator.clipboard.writeText(localStorage.getItem('token') || '')}
+                                >
+                                    Copy
+                                </Button>
+                            </div>
+                        </div>
                         <div className="pt-4">
                             <Button variant="outline" onClick={handleLogout}>
                                 Log Out

@@ -2,6 +2,14 @@ import { FocusMetrics, MetricChartData, BreakSuggestion, DailySummary } from '@/
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
+const getHeaders = () => {
+    const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+    return {
+        'Content-Type': 'application/json',
+        ...(token ? { 'Authorization': `Bearer ${token}` } : {})
+    };
+};
+
 // Real API Service
 export const metricsService = {
     // Save current session metrics to backend
@@ -13,7 +21,7 @@ export const metricsService = {
 
             await fetch(`${API_URL}/metrics`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: getHeaders(),
                 body: JSON.stringify({
                     user_id: user.id,
                     active_time: metrics.activeSeconds / 60, // backend expects minutes
@@ -33,7 +41,9 @@ export const metricsService = {
             const userStr = localStorage.getItem('user');
             const userId = userStr ? JSON.parse(userStr).id : '1';
             
-            const res = await fetch(`${API_URL}/metrics/today?user_id=${userId}`);
+            const res = await fetch(`${API_URL}/metrics/today?user_id=${userId}`, {
+                headers: getHeaders()
+            });
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
 
@@ -71,7 +81,9 @@ export const metricsService = {
             const userStr = localStorage.getItem('user');
             const userId = userStr ? JSON.parse(userStr).id : '1';
 
-            const res = await fetch(`${API_URL}/metrics/history?user_id=${userId}`);
+            const res = await fetch(`${API_URL}/metrics/history?user_id=${userId}`, {
+                headers: getHeaders()
+            });
             if (!res.ok) throw new Error('Network response was not ok');
             const data = await res.json();
 
@@ -122,7 +134,7 @@ export const getBreakSuggestions = async (focusScore: number): Promise<BreakSugg
     try {
         const res = await fetch(`${API_URL}/generate_breaks`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: getHeaders(),
             body: JSON.stringify({ focus_score: focusScore })
         });
         const data = await res.json();

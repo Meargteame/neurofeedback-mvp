@@ -83,7 +83,7 @@ async function syncMetrics() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    // 'Authorization': `Bearer ${token}` // Uncomment when backend enforces it
+                    'Authorization': `Bearer ${token}` 
                 },
                 body: JSON.stringify(payload)
             });

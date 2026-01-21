@@ -4,11 +4,15 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth';
 import metricsRoutes from './routes/metrics';
 import breaksRoutes from './routes/breaks';
+import { initDatabase } from './init';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+// Initialize Database
+initDatabase();
 
 // Middleware
 app.use(cors());

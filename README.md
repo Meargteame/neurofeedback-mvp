@@ -45,7 +45,9 @@ npm run dev
 2. Enable **Developer mode** (toggle in the top right).
 3. Click **Load unpacked**.
 4. Select the `neurofeedback-extension` folder from this project.
-5. The extension is now active and will sync data to `localhost:3001`.
+5. In the Dashboard (Settings page), copy your **User ID** and **Auth Token**.
+6. Open the Extension popup, paste the ID and Token, and click **INITIALIZE_LINK**.
+7. The extension is now active and will sync data to `localhost:3001`.
 
 ## Deployment
 
